@@ -6,15 +6,18 @@ import { Network } from '../source/Network'
 class EmailPasswordStore {
     constructor() {
         this.email = '',
-        this.password = ''
+        this.password = '',
+        this.response = '',
         makeObservable(this, {
+            response: observable,
             email: observable,
             password: observable,
             setEmail: action.bound,
             setPassword: action.bound,
             delEmail: action,
             delPassword: action,
-            buttonAccept: action.bound
+            buttonAccept: action.bound,
+            setResult: action.bound
         }) 
     }
 
@@ -46,9 +49,10 @@ class EmailPasswordStore {
                 .then( response => {
                     if(response.id) {
                         Alert.alert("",`Пользователь авторизован`)
-                        return openNotes(response) 
+                        console.log("id", response.id)
+                        this.response = response
                     } 
-                    else  return Alert.alert("",`Ошибка, возможно пользователь не существует `)
+                    else Alert.alert("",`Ошибка, возможно пользователь не существует `)
                 })
             } catch(error) {
                 console.log("error", error)
@@ -56,6 +60,11 @@ class EmailPasswordStore {
         } else Alert.alert("","Заполните все поля") 
         this.delEmail;
         this.delPassword;
+    }
+
+    setResult() {
+        this.response = this.response.id
+        console.log("ididid", this.response);
     }
 }
 
@@ -77,4 +86,4 @@ class EmailPasswordStore {
 //     })
 // }
 
-export default EmailPasswordStore;
+export const Store = new EmailPasswordStore();

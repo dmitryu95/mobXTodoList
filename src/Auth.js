@@ -4,13 +4,11 @@ import { Network } from './source/Network';
 import { runInAction } from 'mobx';
 import { styles } from "./styles/AuthStyles"
 import { observer } from 'mobx-react';
-import EmailPasswordStore from './stores/emailPasswordStore';
+import { Store } from './stores/emailPasswordStore';
 
-const store = new EmailPasswordStore()
-
-const Auth = observer(props => {
+const Auth = observer(({navigation}) => {
         // БЛОК НАВИГАЦИИ
-        const openNotes = (response) => ( navigation.navigate('Notes', {idUser: response.id }) )
+        // const openNotes = (response) => ( navigation.navigate('Notes', {idUser: response }) )
         const openRegistration = () => { navigation.navigate('Registration') }
 
         // БЛОК СОСТОЯНИЙ
@@ -36,6 +34,12 @@ const Auth = observer(props => {
         //     EmailPasswordStore.delPassword;
         // }
 
+        // Тут может быть неправильно, так как action не вызывается как функция
+        const openNotes = (props) => {
+            Store.buttonAccept()
+            if(Store.response != "")
+                return navigation.navigate('Notes', {idUser: Store.response.id })
+        }
 
         return (           
             <View style={styles.main}>
@@ -46,8 +50,8 @@ const Auth = observer(props => {
                         <Text style={styles.text}>Логин:</Text>
                         <TextInput 
                             style={styles.input} 
-                            value={store.email}
-                            onChangeText={(text)=>store.setEmail(text)} 
+                            value={Store.email}
+                            onChangeText={(text)=>Store.setEmail(text)} 
                             placeholder='Введите логин...'>
                         </TextInput>
                     </View>
@@ -55,13 +59,13 @@ const Auth = observer(props => {
                         <Text style={styles.text}>Пароль:</Text>
                         <TextInput 
                             style={styles.input} 
-                            value={store.password}
-                            onChangeText={(text) => store.setPassword(text)} 
+                            value={Store.password}
+                            onChangeText={(text) => Store.setPassword(text)} 
                             placeholder='Введите пароль...'>
                         </TextInput>                        
                         <TouchableOpacity 
                             style={styles.button}
-                            onPress={store.buttonAccept}>  
+                            onPress={() => openNotes()}>  
                             <Text style={{fontSize: 18}}>Принять</Text>   
                         </TouchableOpacity>
                     </View>
