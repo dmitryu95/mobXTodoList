@@ -5,6 +5,7 @@ import { runInAction } from 'mobx';
 import { styles } from "./styles/AuthStyles"
 import { observer } from 'mobx-react';
 import { Store } from './stores/emailPasswordStore';
+import { StoreToDo } from './stores/noteStore';
 
 const Auth = observer(({navigation}) => {
         // БЛОК НАВИГАЦИИ
@@ -35,10 +36,12 @@ const Auth = observer(({navigation}) => {
         // }
 
         // Тут может быть неправильно, так как action не вызывается как функция
-        const openNotes = (props) => {
+        const openNotes = () => {
             Store.buttonAccept()
+            StoreToDo.setId(Store.response)
             if(Store.response != "")
-                return navigation.navigate('Notes', {idUser: Store.response.id })
+                return (navigation.navigate('Notes', {idUser: Store.response.id }))
+            
         }
 
         return (           
@@ -51,7 +54,7 @@ const Auth = observer(({navigation}) => {
                         <TextInput 
                             style={styles.input} 
                             value={Store.email}
-                            onChangeText={(text)=>Store.setEmail(text)} 
+                            onChangeText={(text) => Store.setEmail(text)} 
                             placeholder='Введите логин...'>
                         </TextInput>
                     </View>

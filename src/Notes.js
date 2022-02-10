@@ -5,13 +5,14 @@ import {styles} from "./styles/NotesStyles";
 import Network from './source/Network';
 
 export default function Notes ({route, navigation}) {
-    const {idUser} = route.params;
+    // const {idUser} = route.params;
 
   return (
     <ImageBackground source = {require('./image/backgroundNotes.jpeg')} resizeMode="cover" style={styles.image}>
         <Text style={styles.navbar}>Заметки</Text>
         <View style={styles.container}>
-          <TodoList idUser={idUser} navigation={navigation} />
+          <TodoList navigation={navigation}/>
+          {/* <TodoList idUser={idUser} navigation={navigation} /> */}
         </View>
     </ImageBackground>
 ) 

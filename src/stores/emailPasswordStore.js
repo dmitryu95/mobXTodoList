@@ -17,7 +17,7 @@ class EmailPasswordStore {
             delEmail: action,
             delPassword: action,
             buttonAccept: action.bound,
-            setResult: action.bound
+            // setResult: action.bound
         }) 
     }
 
@@ -50,7 +50,7 @@ class EmailPasswordStore {
                     if(response.id) {
                         Alert.alert("",`Пользователь авторизован`)
                         console.log("id", response.id)
-                        this.response = response
+                        this.response = response.id
                     } 
                     else Alert.alert("",`Ошибка, возможно пользователь не существует `)
                 })
@@ -62,10 +62,10 @@ class EmailPasswordStore {
         this.delPassword;
     }
 
-    setResult() {
-        this.response = this.response.id
-        console.log("ididid", this.response);
-    }
+    // setResult() {
+    //     this.response = this.response.id
+    //     console.log("ididid", this.response);
+    // }
 }
 
 // const EmailPasswordStore = (email, password) => {

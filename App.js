@@ -4,7 +4,7 @@ import Navigate from "./navigate";
 
 const App = () => {
   return (
-      <Navigate />
+        <Navigate />
   )
 }
 
