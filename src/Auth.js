@@ -32,7 +32,7 @@ const Auth = inject(
               style={styles.input}
               value={Store.email}
               onChangeText={text => Store.setEmail(text)}
-              placeholder="Введите логин..."></TextInput>
+              placeholder="Введите логин..."/>
           </View>
           <View style={styles.loginPass}>
             <Text style={styles.text}>Пароль:</Text>
@@ -40,7 +40,7 @@ const Auth = inject(
               style={styles.input}
               value={Store.password}
               onChangeText={text => Store.setPassword(text)}
-              placeholder="Введите пароль..."></TextInput>
+              placeholder="Введите пароль..."/>
             <TouchableOpacity
               style={styles.button}
               onPress={() =>

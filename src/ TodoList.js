@@ -10,7 +10,6 @@ import Confirmation from './Confirmation';
 const TodoList = inject('StoreToDo')(
   observer(
     ({
-      navigation,
       listOfItems,
       title,
       setTitle,
@@ -23,7 +22,7 @@ const TodoList = inject('StoreToDo')(
 
       const renderItem = ({item}) => {
         const backgroundColor =
-          item.done == true
+          item.done
             ? (StoreToDo.color = '#74dba4')
             : (StoreToDo.color = 'white');
         return (

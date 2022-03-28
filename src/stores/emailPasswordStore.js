@@ -1,5 +1,4 @@
 import {action, makeObservable, observable} from 'mobx';
-import React, {Component} from 'react';
 import {Alert} from 'react-native';
 import {Network} from '../source/Network';
 import {StoreToDo} from './noteStore';
@@ -50,7 +49,7 @@ class EmailPasswordStore {
             Alert.alert('', `Пользователь авторизован`);
             this.response = response.id;
             StoreToDo.id = this.response;
-            if (this.response != '') navigation.navigate(page);
+            if (this.response !== '') navigation.navigate(page);
           } else
             Alert.alert('', `Ошибка, возможно пользователь не существует `);
         });

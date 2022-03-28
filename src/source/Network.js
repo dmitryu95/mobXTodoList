@@ -1,5 +1,4 @@
 const Network = async (url, id, method, body) => {
-  console.log(url, id, method, body);
 
   const response = await fetch(`http://10.0.2.2:300/api/${url}${id}`, {
     method: method,

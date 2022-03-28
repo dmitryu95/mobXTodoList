@@ -1,6 +1,5 @@
 import {action, makeObservable, observable} from 'mobx';
 import {Network} from '../source/Network';
-import {Store} from './emailPasswordStore';
 
 class NoteStore {
   constructor() {

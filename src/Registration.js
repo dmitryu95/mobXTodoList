@@ -19,7 +19,7 @@ const Registration = inject('Store')(
             style={styles.input}
             value={Store.email}
             onChangeText={text => Store.setEmail(text)}
-            placeholder="Введите логин..."></TextInput>
+            placeholder="Введите логин..."/>
         </View>
         <View style={styles.loginPass}>
           <Text style={styles.text}>Придумайте пароль</Text>
@@ -27,7 +27,7 @@ const Registration = inject('Store')(
             style={styles.input}
             value={Store.password}
             onChangeText={text => Store.setPassword(text)}
-            placeholder="Введите пароль..."></TextInput>
+            placeholder="Введите пароль..."/>
         </View>
         <TouchableOpacity
           style={styles.button}
