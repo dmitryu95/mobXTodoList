@@ -1,13 +1,21 @@
 import React from 'react';
-import { NavigationContainer } from '@react-navigation/native';
-import Navigate from "./navigate";
+import {Provider} from 'mobx-react';
+import {StoreToDo} from './src/stores/noteStore';
+import {Store} from './src/stores/emailPasswordStore';
+
+import {NavigationContainer} from '@react-navigation/native';
+import DrawerNavigation from './DrawerNavigation';
 
 const App = () => {
+  const stores = {StoreToDo, Store};
   return (
-        <Navigate />
-  )
-}
+    <Provider {...stores}>
+      <NavigationContainer>
+        {/* <Navigate/> */}
+        <DrawerNavigation />
+      </NavigationContainer>
+    </Provider>
+  );
+};
 
 export default App;
-
-

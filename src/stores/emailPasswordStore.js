@@ -1,13 +1,14 @@
-import {action, makeObservable, observable} from 'mobx'
-import React, { Component } from 'react'
-import { View, Text, StyleSheet, TextInput, TouchableOpacity, Button, Alert } from 'react-native';
-import { Network } from '../source/Network'
+import {action, makeObservable, observable} from 'mobx';
+import React, {Component} from 'react';
+import {Alert} from 'react-native';
+import {Network} from '../source/Network';
+import {StoreToDo} from './noteStore';
 
 class EmailPasswordStore {
-    constructor() {
-        this.email = '',
-        this.password = '',
-        this.response = '',
+  constructor() {
+    (this.email = ''),
+    (this.password = ''),
+    (this.response = ''),
         makeObservable(this, {
             response: observable,
             email: observable,
@@ -17,73 +18,62 @@ class EmailPasswordStore {
             delEmail: action,
             delPassword: action,
             buttonAccept: action.bound,
-            // setResult: action.bound
-        }) 
-    }
+            replace: action.bound,
+            getEmail: action.bound,
+        });
+  }
 
-    setEmail(text) {
-        this.email = text
-        console.log("Email", this.email);
-    }
+  setEmail(text) {
+    this.email = text;
+  }
 
-    setPassword(text) {
-        this.password = text
-    }
+  setPassword(text) {
+    this.password = text;
+  }
 
-    delEmail() {
-        this.email = ''
-    }
+  delEmail() {
+    this.email = '';
+  }
 
-    delPassword() {
-        this.password = ''
-    }
+  delPassword() {
+    this.password = '';
+  }
 
-    buttonAccept() {
-        console.log("email, password", this.email, this.password);
-        if (this.email && this.password !== "") {
-            try { 
-                Network("Users/login",'', "POST", {
-                    email: this.email, 
-                    password: this.password
-                })
-                .then( response => {
-                    if(response.id) {
-                        Alert.alert("",`Пользователь авторизован`)
-                        console.log("id", response.id)
-                        this.response = response.id
-                    } 
-                    else Alert.alert("",`Ошибка, возможно пользователь не существует `)
-                })
-            } catch(error) {
-                console.log("error", error)
-            }
-        } else Alert.alert("","Заполните все поля") 
-        this.delEmail;
-        this.delPassword;
-    }
+  buttonAccept({navigation}, url, method, page) {
+    if (this.email && this.password !== '') {
+      try {
+        Network(url, '', method, {
+          email: this.email,
+          password: this.password,
+        }).then(response => {
+          if (response.id) {
+            Alert.alert('', `Пользователь авторизован`);
+            this.response = response.id;
+            StoreToDo.id = this.response;
+            if (this.response != '') navigation.navigate(page);
+          } else
+            Alert.alert('', `Ошибка, возможно пользователь не существует `);
+        });
+      } catch (error) {
+        console.log('error', error);
+      }
+    } else Alert.alert('', 'Заполните все поля');
+    this.delPassword();
+  }
 
-    // setResult() {
-    //     this.response = this.response.id
-    //     console.log("ididid", this.response);
-    // }
+  getEmail() {
+    Network('Users/logout?access_token=', this.response, 'GET').then(
+      response => (this.email = response.email),
+    );
+  }
+
+  replace({navigation}) {
+    Network('Users/logout?access_token=', this.response, 'POST').then(
+      response => console.log('ответ что кого', response),
+    );
+    Network('Users/logout?access_token=', StoreToDo.id, 'POST');
+    navigation.navigate('Auth');
+  }
 }
-
-// const EmailPasswordStore = (email, password) => {
-//     return makeObservable({
-//         email: 0,
-//         password: 0,
-//         setEmail(email) { this.email = email },
-//         delEmail() { this.email= "" },
-//         setPassword(password) { this.password = password },
-//         delPassword() { this.password = ""},
-//     },{
-//         email: observable,
-//         password: observable,
-//         setEmail: action,
-//         delEmail: action,
-//         setPassword: action,
-//         delPassword: action
-//     })
-// }
 
 export const Store = new EmailPasswordStore();

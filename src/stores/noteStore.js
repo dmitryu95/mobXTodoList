@@ -1,77 +1,104 @@
-import { action, makeObservable, observable } from "mobx"
-import { logIfNoNativeHook } from "react-native/Libraries/Utilities/RCTLog"
-import { Network } from "../source/Network"
-import { Store } from "../stores/emailPasswordStore"
+import {action, makeObservable, observable} from 'mobx';
+import {Network} from '../source/Network';
+import {Store} from './emailPasswordStore';
 
 class NoteStore {
-    constructor() {
-        this.listOfItems= [""],
-        this.title="",
-        this.completeTask= false,
-        this.id = ''
-        makeObservable(this, {
-            listOfItems: observable,
-            title: observable,
-            id: observable,
-            setId: action.bound,
-            completeTask: observable,
-            setListOfItems: action.bound,
-            setTitle: action.bound,
-            setCompleteTask: action.bound,
-            addNewNote: action.bound,
-            deleteNote: action.bound,
-            // onChangetitle: action.bound
-        })
+  constructor() {
+    (this.listOfItems = []),
+      (this.title = ''),
+      (this.completeTask = false),
+      (this.id = ''),
+      (this.done = false),
+      (this.itemId = ''),
+      (this.itemTitle = ''),
+      (this.color = 'white'),
+      (this.visible = false),
+      (this.aceept = false),
+      (this.editTitle = ''),
+      makeObservable(this, {
+        done: observable,
+        color: observable,
+        listOfItems: observable,
+        title: observable,
+        id: observable,
+        itemId: observable,
+        itemTitle: observable,
+        editTitle: observable,
+        visible: observable,
+        aceept: observable,
+        completeTask: observable,
+        setListOfItems: action.bound,
+        setTitle: action.bound,
+        setCompleteTask: action.bound,
+        addNewNote: action.bound,
+        deleteNote: action.bound,
+        acceptChange: action.bound,
+        editItem: action.bound,
+        setVisible: action.bound,
+        setAccept: action.bound,
+      });
+  }
+
+  setListOfItems() {
+    Network('tasks?access_token=', this.id, 'GET').then(result => {
+      this.listOfItems = result;
+    });
+  }
+
+  setCompleteTask(item) {
+    if (!item.done) {
+      Network(`tasks/${item.id}?access_token=`, this.id, 'PUT', {
+        done: true,
+        title: item.title,
+      });
+    } else {
+      Network(`tasks/${item.id}?access_token=`, this.id, 'PUT', {
+        done: false,
+        title: item.title,
+      });
     }
+    setTimeout(this.setListOfItems, 200);
+  }
 
-    setId(id) {
-        this.id = id
-        console.log("SetId", this.id);
-    }
+  setTitle(text) {
+    this.title = text;
+  }
 
-    setListOfItems() {
-        this.listOfItems = Network("tasks?access_token=",this.id, "GET")
-        console.log("из массива туду листа",this.listOfItems)
-        console.log("айдиха", this.id);
-    }
+  editItem(text) {
+    this.editTitle = text;
+  }
 
-    setCompleteTask() {
+  acceptChange(id) {
+    Network(`tasks/${id}?access_token=`, this.id, 'PUT', {
+      title: this.editTitle,
+    });
+    setTimeout(this.setListOfItems, 200);
+    this.setVisible(false);
+    this.itemTitle = '';
+    this.editTitle = '';
+  }
 
-    }
+  setVisible(state, id, title) {
+    this.editTitle = '';
+    this.visible = state;
+    this.itemId = id;
+    this.itemTitle = title;
+  }
 
-    setTitle(text) {
-        this.title = text
-    }
+  setAccept(state) {
+    this.aceept = state;
+  }
 
-    // onChangetitle(text) {
-    //     this.title = text
-    // }
+  addNewNote() {
+    Network('tasks?access_token=', this.id, 'POST', {title: this.title});
+    setTimeout(this.setListOfItems, 200);
+    this.setTitle('');
+  }
 
-    addNewNote() {
-        console.log("id",this.id);
-        Network("tasks?access_token=",this.id, "POST", {"title": this.title})
-        console.log("Вот что должно улететь на сервер", this.title);
-        this.setListOfItems()
-        console.log("а вот что имеем", this.listOfItems)
-        // setListOfItems((list) => {
-        //     return [
-        //       {
-        //         title: title,
-        //         id: Math.random().toString(36).substr(2),
-        //         completeTask: false,
-        //       },
-        //       ...list,
-        //     ];
-        //   })
-        //   Network(fullUrl, idUser, "POST", {title})
-        //   setTitle("");
-        this.setTitle("")
-    }
-
-    deleteNote() {
-
-    }
-
+  deleteNote(id) {
+    Network(`tasks/${id}?access_token=`, this.id, 'DELETE');
+    setTimeout(this.setListOfItems, 200);
+  }
 }
 
-export const StoreToDo = new NoteStore()
+export const StoreToDo = new NoteStore();

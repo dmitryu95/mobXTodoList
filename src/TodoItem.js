@@ -1,36 +1,33 @@
-import React, { useState, useEffect } from "react";
-import { Text, TouchableOpacity, View, TextInput } from "react-native";
-import { styles } from "./styles/TodoListStyles";
-import CheckBox from "@react-native-community/checkbox";
-import { StoreToDo } from './stores/noteStore';
-import { observe } from "react-native/Libraries/LogBox/Data/LogBoxData";
+import React from 'react';
+import {Text, TouchableOpacity, View} from 'react-native';
+import {styles} from './styles/TodoListStyles';
+import {StoreToDo} from './stores/noteStore';
+import {observer, inject} from 'mobx-react';
 
-const TodoItem = observe(({ item, deleteNote }) => {
-  // const [toggleCheckBox, setToggleCheckBox] = useState(false);
-  // const [text, onChangeText] = useState(item.title);
-
-  return (
-    <View style={styles.main}>
-      <View style={styles.list}>
-        {/* <CheckBox
-          disabled={false}
-          value={toggleCheckBox}
-          onValueChange={(newValue) => setToggleCheckBox(newValue)}
-        /> */}
-        <TextInput
-          style={styles.textBlock}
-          value={StoreToDo.title}
-          onChangeText={(text) => onChangeText(text)}
-          // placeholder={item.title}
-        />
+const TodoItem = inject('StoreToDo')(
+  observer(({item, backgroundColor}) => {
+    return (
+      <View style={styles.main}>
+        <TouchableOpacity
+          style={styles.end}
+          onPress={() => StoreToDo.setVisible(true, item.id, item.title)}>
+          <Text style={styles.text}>Edit</Text>
+        </TouchableOpacity>
+        <View style={[styles.list, {backgroundColor: backgroundColor}]}>
+          <TouchableOpacity
+            style={styles.textBlock}
+            onPress={() => StoreToDo.setCompleteTask(item)}>
+            <Text style={[styles.textBlock, styles.text]}>{item.title}</Text>
+          </TouchableOpacity>
+        </View>
+        <TouchableOpacity
+          style={styles.buttonDel}
+          onPress={() => StoreToDo.deleteNote(item.id)}>
+          <Text style={styles.del}>X</Text>
+        </TouchableOpacity>
       </View>
-      {/* <TouchableOpacity
-        style={styles.buttonDel}
-        onPress={() => deleteNote(item.id)}>
-        <Text style={styles.del}>X</Text>
-      </TouchableOpacity> */}
-    </View>
-  );
-})
+    );
+  }),
+);
 
 export default TodoItem;
